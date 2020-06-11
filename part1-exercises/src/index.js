@@ -2,6 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 
+const Header = (props)=>{
+  return (
+    <h1>{props.course}</h1>
+  )
+}
+const Content = (props) => {
+  return (
+    <div>      
+      {props.parts.map(part => (<Part name={part.name} exercise={part.exercises}/>))}
+    </div>
+  )
+}
+const Part = (props) => {
+  return(
+    <p>{props.name} {props.exercise}</p>
+  )
+}
+const Total = (props) => {
+  return (
+    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+  )
+}
+
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
@@ -18,34 +42,6 @@ const App = () => {
       <Content parts={course.parts}/>
       <Total parts={course.parts} />
     </div>
-  )
-}
-
-
-const Header = (props)=>{
-  return (
-    <h1>{props.course}</h1>
-  )
-}
-const Content = (props) => {
-  return (
-    <div>
-      props.map(part => <Part />)
-      props.forEach(<Part />)
-      <Part content = {props.parts[0]}/>
-      <Part content = {props.parts[1]}/>
-      <Part content = {props.parts[2]}/>
-    </div>
-  )
-}
-const Part = (name, exercise) => {
-  return(
-    <p>{props.content.name} {props.content.exercises}</p>
-  )
-}
-const Total = (props) => {
-  return (
-    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
   )
 }
 
