@@ -23,9 +23,7 @@ const App = (props) => {
       <button onClick={handleVote}>vote</button>
       <button onClick={handleClick}>Get random quote</button>
       <h2>Anecdote with most views</h2>
-      <div>
-        {max > 0 ? <p>{props.anecdotes[index]} <br></br> Has {max} points</p> : "No votes"}
-      </div>
+      <div>{max > 0 ? <p>{props.anecdotes[index]} <br></br> Has {max} points</p> : "No votes"}</div>
     </div>
   )
 }
