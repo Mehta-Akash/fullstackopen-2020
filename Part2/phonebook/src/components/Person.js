@@ -1,9 +1,11 @@
 import React from 'react'
 
-const Person = ({person}) => {
+const Person = ({name, number, handleRemovePerson, id}) => {
     return (
-    <li>{person.name} {person.number}</li>
-    )
-  }
+    <div>
+    <li>{name} {number} <button type="submit" value={id} onClick={handleRemovePerson}>delete</button></li>
+    </div>
+  )
+}
 
 export default Person

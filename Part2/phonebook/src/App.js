@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './services/persons'
 
 
 const App = () => {
@@ -13,24 +13,41 @@ const App = () => {
 
 
 useEffect(()=>{
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response =>{
-      setPersons(response.data)
+  personService
+    .getAll()
+    .then(initialPeople =>{
+      setPersons(initialPeople)
     })
 }, [])
 
-
   const addPerson = (event) => {
     event.preventDefault();
-    if (persons.filter(x => x.name === newName).length > 0){
+    let filterPerson = persons.filter(x => x.name === newName && x.number === newNumber)
+    
+    if (filterPerson.length > 0){
       alert(`${newName} is already added to phonebook`)
+    } else if (persons.filter(x => (x.number === newNumber).length < 1) && (persons.filter(x => x.name === newName).length > 0)){
+      if (window.confirm(`${newName} has already been added to phonebook, replace the old number with a new one?`)){
+        let person = persons.filter(x => x.name === newName)
+        let id = person[0].id
+        const updatedPerson = {
+          name: newName,
+          number: newNumber,
+        }
+        personService.update(id, updatedPerson)
+          .then(response => {
+            setPersons(persons.map(people => people.id !== id ? people: response))
+          })
+      }
     } else {
       const personObject = {
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(personObject))
+      personService.create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+        })
     }
     setNewName('')
     setNewNumber('')
@@ -38,7 +55,6 @@ useEffect(()=>{
   }
   
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value)
   }
 
@@ -49,6 +65,22 @@ useEffect(()=>{
   const handleFilter = (event) => {
     setFiltered(event.target.value)
     
+  }
+
+  const removePerson = (event) => {
+    let personId = event.target.value
+    let thePerson = persons.filter(person => person.id == personId)
+    if (window.confirm(`Delete ${thePerson[0].name}?`)){
+      personService
+        .remove(personId)
+        .catch(error => {
+          alert(`${thePerson[0].name} was already deleted from the seerver`);
+        })
+        .then(response => {
+          console.log(response);
+          setPersons(persons.filter(x => x.id !== personId))
+        })
+    }
   }
   
   return (
@@ -61,7 +93,7 @@ useEffect(()=>{
       <PersonForm onSubmit={addPerson} newName={newName} newNumber={newNumber} 
         onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <Persons persons={persons} filtered={filtered}/>
+      <Persons persons={persons} filtered={filtered.toLowerCase()} handleRemovePerson={removePerson}/>
     </div>
   )
 }
