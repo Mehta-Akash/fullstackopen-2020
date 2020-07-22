@@ -93,12 +93,12 @@ useEffect(()=>{
     if (window.confirm(`Delete ${thePerson[0].name}?`)){
       personService
         .remove(personId)
-        .catch(error => {
-          alert(`${thePerson[0].name} was already deleted from the seerver`);
-        })
         .then(response => {
           console.log(response);
           setPersons(persons.filter(x => x.id !== personId))
+        })
+        .catch(error => {
+          alert(`${thePerson[0].name} was already deleted from the seerver`);
         })
     }
   }
