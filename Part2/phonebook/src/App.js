@@ -3,6 +3,8 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 
 const App = () => {
@@ -10,6 +12,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [filtered, setFiltered] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
 useEffect(()=>{
@@ -38,6 +41,18 @@ useEffect(()=>{
           .then(response => {
             setPersons(persons.map(people => people.id !== id ? people: response))
           })
+          .then(() => {
+            setErrorMessage(`${newName}'s phone number has been updated`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000);
+          })
+          .catch(error => {
+            setErrorMessage(`Information of ${newName} has already been removed from the server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000);
+          })
       }
     } else {
       const personObject = {
@@ -46,8 +61,13 @@ useEffect(()=>{
       }
       personService.create(personObject)
         .then(returnedPerson => {
+          setErrorMessage(`${newName} has been added`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000);
           setPersons(persons.concat(returnedPerson))
         })
+
     }
     setNewName('')
     setNewNumber('')
@@ -86,6 +106,7 @@ useEffect(()=>{
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage}/>
         <div>
           <Filter value={filtered} persons={persons} filter={filtered} onChange={handleFilter}/>
         </div>
