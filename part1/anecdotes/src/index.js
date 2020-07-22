@@ -1,51 +1,33 @@
-import './index.css';
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
-  const [max, setMax] = useState(0);
 
-  let a = 0;
-
-  const handleClick = () => {
-    let x = Math.floor(Math.random() * anecdotes.length)
-
-    let maximum = 0;
-    for (let i = 0; i < anecdotes.length; i++){
-      if (a < points[i]){
-        a = points[i];
-        maximum = i;
-      }
-    }
-    setMax(maximum);
-    console.log(maximum)
-    return setSelected(x);
-  }
+  const handleClick = () => setSelected(Math.floor(Math.random() * anecdotes.length));
+  
   const handleVote = () => {
-    const copy = {...points};
-    copy[selected] +=1;
-    return setPoints(copy);
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
   }
+
+  const max = Math.max(...points)
+  let index = points.indexOf(max)
 
   return (
     <div>
-      <div>
-        <h2>Anecdote of the day</h2>
-        <div>{props.anecdotes[selected]}</div>
-        <div>{`has ${points[selected]} votes`}</div>
-      </div>
+      <h2>Anecdote of the day</h2>
+      <p>{props.anecdotes[selected]} <br></br> Has {points[selected]} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleClick}>Get random quote</button>
-      <div>
-        <h2>Anecdote with most views</h2>
-        <div>{props.anecdotes[max]}</div>
-        <div>{`has ${points[max]} points`}</div>
-      </div>
+      <h2>Anecdote with most views</h2>
+      <div>{max > 0 ? <p>{props.anecdotes[index]} <br></br> Has {max} points</p> : "No votes"}</div>
     </div>
   )
 }
+
 const anecdotes = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
