@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Conversations with Coleman",
-  "author": "Coleman Hughes",
-  "url": "https://colemanhughes.org/",
-  "likes": 5
+  "title": "Mindscape",
+  "author": "Sean Carroll",
+  "url": "https://www.preposterousuniverse.com/podcast/",
+  "likes": 7
 }
