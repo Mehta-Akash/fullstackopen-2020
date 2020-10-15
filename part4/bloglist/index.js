@@ -1,4 +1,5 @@
-require('dotenv').config();
+const config = require('./utils/config');
+
 const express = require('express');
 
 const app = express();
@@ -10,7 +11,7 @@ app.use(cors());
 // app.use(express.static('build'));
 app.use(express.json());
 app.use(
-  morgan(':method :url :status :res[content-length] :response-time ms :data'),
+  morgan(':method :url :status :res[content-length] :response-time ms :data')
 );
 
 morgan.token('data', (req) => JSON.stringify(req.body));
@@ -41,7 +42,6 @@ app.post('/api/blogs', (request, response) => {
   });
 });
 
-const { PORT } = process.env;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`);
 });
