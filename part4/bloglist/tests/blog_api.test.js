@@ -39,7 +39,7 @@ test('blogs returned as json and returns correct amount', async () => {
   expect(response.body).toHaveLength(initalBlog.length);
 });
 
-test.only('id is the unique identifier', async () => {
+test('id is the unique identifier', async () => {
   const response = await api.get('/api/blogs');
   expect(response.body[0].id).toBeDefined();
 });
@@ -54,7 +54,7 @@ test('a valid blog can be added', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /application\/json/);
 
   const response = await api.get('/api/blogs');
@@ -62,6 +62,22 @@ test('a valid blog can be added', async () => {
 
   expect(response.body).toHaveLength(initalBlog.length + 1);
   expect(title).toContain('Mindscape');
+});
+
+test.only('if likes property is empty, defaults to 0', async () => {
+  const newBlog = {
+    title: 'Mindscape',
+    author: 'Sean Carroll',
+    url: 'https://www.preposterousuniverse.com/podcast/',
+  };
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+  expect(response.body[initalBlog.length].likes).toBe(0);
 });
 
 afterAll(() => {
