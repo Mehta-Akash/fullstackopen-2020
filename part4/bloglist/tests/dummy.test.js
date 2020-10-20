@@ -140,7 +140,7 @@ describe('Most likes', () => {
     },
   ];
 
-  test.only('return the blog with the most likes', () => {
+  test('return the blog with the most likes', () => {
     const mostLiked = listHelper.favouriteBlog(allBlogs);
     expect(mostLiked).toEqual({
       title: 'Canonical string reduction',
