@@ -1,30 +1,14 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const helper = require('./test_helper');
 const app = require('../app');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
 
-const initalBlog = [
-  {
-    title: 'Waking up',
-    author: 'Sam Harris',
-    url: 'https://samharris.org/',
-    likes: 10,
-    id: '5f88a6f21fa2dee9dd972da3',
-  },
-  {
-    title: 'Conversations with Coleman',
-    author: 'Coleman Hughes',
-    url: 'https://colemanhughes.org/',
-    likes: 5,
-    id: '5f88a73c50dd4dea39f73072',
-  },
-];
-
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const blogObjects = initalBlog.map((blog) => new Blog(blog));
+  const blogObjects = helper.initialBlog.map((blog) => new Blog(blog));
   const promiseArray = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArray);
 });
@@ -36,7 +20,7 @@ test('blogs returned as json and returns correct amount', async () => {
     .expect('Content-Type', /application\/json/);
 
   const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(initalBlog.length);
+  expect(response.body).toHaveLength(helper.initialBlog.length);
 });
 
 test('id is the unique identifier', async () => {
@@ -44,7 +28,7 @@ test('id is the unique identifier', async () => {
   expect(response.body[0].id).toBeDefined();
 });
 
-test('a valid blog can be added', async () => {
+test.only('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Mindscape',
     author: 'Sean Carroll',
@@ -57,10 +41,10 @@ test('a valid blog can be added', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
-  const title = response.body.map((r) => r.title);
+  const blogsAtEnd = await helper.blogsInDb();
+  const title = blogsAtEnd.map((r) => r.title);
 
-  expect(response.body).toHaveLength(initalBlog.length + 1);
+  expect(blogsAtEnd).toHaveLength(helper.initialBlog.length + 1);
   expect(title).toContain('Mindscape');
 });
 
@@ -77,10 +61,10 @@ test('if likes property is empty, defaults to 0', async () => {
     .expect('Content-Type', /application\/json/);
 
   const response = await api.get('/api/blogs');
-  expect(response.body[initalBlog.length].likes).toBe(0);
+  expect(response.body[helper.initialBlog.length].likes).toBe(0);
 });
 
-test.only('if title and url missing in post request, returns 400', async () => {
+test('if title and url missing in post request, returns 400', async () => {
   const newBlog = {
     author: 'Sean Carroll',
     likes: 7,
