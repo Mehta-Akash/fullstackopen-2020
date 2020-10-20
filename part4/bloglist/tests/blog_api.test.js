@@ -27,15 +27,9 @@ beforeEach(async () => {
   const blogObjects = initalBlog.map((blog) => new Blog(blog));
   const promiseArray = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArray);
-
-  // if promises need to be executed in a particular order
-  //   for (let blog of helper.initialBlogs) {
-  //     let blogObject = new Blog(blog);
-  //     await blogObject.save();
-  //   }
 });
 
-test.only('blogs returned as json and returns correct amount', async () => {
+test('blogs returned as json and returns correct amount', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
@@ -43,6 +37,11 @@ test.only('blogs returned as json and returns correct amount', async () => {
 
   const response = await api.get('/api/blogs');
   expect(response.body).toHaveLength(initalBlog.length);
+});
+
+test.only('id is the unique identifier', async () => {
+  const response = await api.get('/api/blogs');
+  expect(response.body[0].id).toBeDefined();
 });
 
 test('a valid blog can be added', async () => {
