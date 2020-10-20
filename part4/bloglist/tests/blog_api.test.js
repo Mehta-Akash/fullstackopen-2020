@@ -64,7 +64,7 @@ test('a valid blog can be added', async () => {
   expect(title).toContain('Mindscape');
 });
 
-test.only('if likes property is empty, defaults to 0', async () => {
+test('if likes property is empty, defaults to 0', async () => {
   const newBlog = {
     title: 'Mindscape',
     author: 'Sean Carroll',
@@ -78,6 +78,15 @@ test.only('if likes property is empty, defaults to 0', async () => {
 
   const response = await api.get('/api/blogs');
   expect(response.body[initalBlog.length].likes).toBe(0);
+});
+
+test.only('if title and url missing in post request, returns 400', async () => {
+  const newBlog = {
+    author: 'Sean Carroll',
+    likes: 7,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
 });
 
 afterAll(() => {

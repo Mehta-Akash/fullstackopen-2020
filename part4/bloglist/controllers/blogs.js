@@ -6,13 +6,14 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
   if (!request.body.likes) {
     request.body.likes = 0;
   }
   const blog = new Blog(request.body);
   const savedBlog = await blog.save();
   response.json(savedBlog.toJSON());
+
   // blog.save().then((result) => {
   //   response.status(201).json(result);
   // });
