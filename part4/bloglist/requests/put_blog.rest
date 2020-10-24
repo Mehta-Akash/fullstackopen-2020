@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/5f88d98c3acf9d3148094001
+Content-Type: application/json
+
+{
+  "title": "Mindscape",
+  "author": "Sean Carroll",
+  "url": "https://www.preposterousuniverse.com/podcast/",
+  "likes": 7
+}
