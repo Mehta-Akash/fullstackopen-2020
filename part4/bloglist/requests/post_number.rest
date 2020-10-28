@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFrYXNoIiwiaWQiOiI1Zjk5M2MyMmQ1MzlkMWZkNjYxYjczNzciLCJpYXQiOjE2MDM4ODgwNDl9.O-u13_7XZcGbS3FzgFsVlr-Jr0DXCGy3g_hVWZxU-Gs
 
 {
-  "title": "Something",
+  "title": "Another",
   "author": "Sean Carroll",
   "url": "https://www.preposterousuniverse.com/podcast/",
   "likes": 7
