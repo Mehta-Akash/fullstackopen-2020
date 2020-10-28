@@ -103,7 +103,7 @@ describe('when there is initially one user in the db', () => {
     await user.save();
   });
 
-  test.only('creation succeeds with a fresh username', async () => {
+  test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
@@ -142,6 +142,69 @@ describe('when there is initially one user in the db', () => {
 
     expect(result.body.error).toContain('`username` to be unique');
 
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test('usernames less than 3 character are not created and suitable status code & error message is sent', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'ro',
+      name: 'Superuser',
+      password: 'salainen',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain(
+      'is shorter than the minimum allowed length (3)'
+    );
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test('password less than 3 characters are not added and sutibale error sent', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'rope',
+      name: 'someones name',
+      password: 'ab',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain(
+      'password must be at least 3 characters long'
+    );
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test.only('username and password must be given', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      name: 'someones name',
+      password: 'abcd',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain('Path `username` is required.');
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toHaveLength(usersAtStart.length);
   });
