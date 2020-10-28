@@ -8,6 +8,19 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
+const tokenExtractor = (req, res, next) => {
+  const token = getTokenFrom(req);
+  req.token = token;
+  next();
+};
+
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' });
 };
@@ -21,6 +34,11 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'ValidationError') {
     return res.status(400).json({ error: error.message });
   }
+  if (error.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      error: 'invalid token',
+    });
+  }
 
   next(error);
 };
@@ -29,4 +47,5 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
 };

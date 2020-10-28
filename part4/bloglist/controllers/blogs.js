@@ -8,20 +8,11 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs);
 });
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.post('/', async (request, response, next) => {
   const { body } = request;
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-  if (!token || !decodedToken.id) {
+  if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
 
@@ -47,6 +38,14 @@ blogsRouter.post('/', async (request, response, next) => {
 });
 
 blogsRouter.delete('/:id', async (request, response, next) => {
+  const blog = await Blog.findById(request.params.id);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response
+      .status(401)
+      .json({ error: 'invalid user to delete this note' });
+  }
   await Blog.findByIdAndDelete(request.params.id);
   response.status(204).end();
 });
