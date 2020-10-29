@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const helper = require('./test_helper');
 const app = require('../app');
 const User = require('../models/users');
+const jwt = require('jsonwebtoken');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
@@ -13,9 +14,14 @@ beforeEach(async () => {
   const blogObjects = helper.initialBlog.map((blog) => new Blog(blog));
   const promiseArray = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArray);
+
+  await User.deleteMany({});
+  const passwordHash = await bcrypt.hash('astro', 10);
+  const user = new User({ username: 'testUser', passwordHash });
+  await user.save();
 });
 
-describe('when there are initially some notes', () => {
+describe('when there are initially some blogs', () => {
   test('blogs returned as json and returns correct amount', async () => {
     await api
       .get('/api/blogs')
@@ -32,7 +38,7 @@ describe('when there are initially some notes', () => {
   });
 });
 
-describe('addition of a new note', () => {
+describe('addition of a new blog', () => {
   test('a valid blog can be added', async () => {
     const newBlog = {
       title: 'Mindscape',
@@ -40,9 +46,19 @@ describe('addition of a new note', () => {
       url: 'https://www.preposterousuniverse.com/podcast/',
       likes: 7,
     };
+    const person = await helper.usersInDb();
+
+    const userForToken = {
+      username: person[0].username,
+      id: person[0].id,
+    };
+
+    const token = jwt.sign(userForToken, process.env.SECRET);
+
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `bearer ${token}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
@@ -76,6 +92,15 @@ describe('addition of a new note', () => {
     };
 
     await api.post('/api/blogs').send(newBlog).expect(400);
+  });
+  test.only('if token is not passed in header returns correct status code', async () => {
+    const newBlog = {
+      title: 'Mindscape',
+      author: 'Sean Carroll',
+      url: 'https://www.preposterousuniverse.com/podcast/',
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(401);
   });
 });
 
@@ -190,7 +215,7 @@ describe('when there is initially one user in the db', () => {
     expect(usersAtEnd).toHaveLength(usersAtStart.length);
   });
 
-  test.only('username and password must be given', async () => {
+  test('username and password must be given', async () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
