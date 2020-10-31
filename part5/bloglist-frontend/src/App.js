@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+import Footer from './components/Footer';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import './App.css';
@@ -12,6 +14,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -26,6 +29,13 @@ const App = () => {
     }
   }, []);
 
+  const notifier = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 5000);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -38,14 +48,15 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
+      notifier(`Welcome ${user.name}`);
     } catch (exception) {
+      notifier('Wrong username or password');
       console.log(exception);
     }
   };
 
   const addBLog = async (e) => {
     e.preventDefault();
-    console.log('blog update');
 
     try {
       const blog = await blogService.create({
@@ -54,10 +65,12 @@ const App = () => {
         url,
       });
       setBlogs(blogs.concat(blog));
+      notifier(`A new blog ${title} by ${author} has been added`);
       setUrl('');
       setAuthor('');
       setTitle('');
     } catch (exception) {
+      notifier(`A new blog could not be added: make sure to fill all items`);
       console.log(exception);
     }
   };
@@ -123,20 +136,27 @@ const App = () => {
   );
 
   return (
-    <div>
+    <div className="pageContainer">
       <h2 className="heading">Blogs Website</h2>
+      <Notification message={errorMessage} />
       {user === null ? (
         loginForm()
       ) : (
         <div>
-          <p>{user.name} is loged in</p>
-          <button onClick={() => logout()}>logout</button>
+          <div className="username">
+            <p>{user.name} is loged in</p>
+            <button onClick={() => logout()}>logout</button>
+          </div>
+          <h2 className="sub-heading">Create new blog</h2>
           {blogForm()}
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          <div className="cards">
+            {blogs.map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+          </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 };
