@@ -90,7 +90,7 @@ const App = () => {
       <BlogForm createBlog={addBlog} />
     </Togglable>
   );
-
+  blogs.sort((first, second) => second.likes - first.likes);
   return (
     <div className="pageContainer">
       <h2 className="heading">Blogs Website</h2>
