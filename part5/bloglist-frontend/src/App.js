@@ -11,12 +11,7 @@ import './App.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -39,42 +34,28 @@ const App = () => {
     }, 5000);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (loginObject) => {
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
+      const user = await loginService.login(loginObject);
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername('');
-      setPassword('');
       notifier(`Welcome ${user.name}`);
     } catch (exception) {
       notifier('Wrong username or password');
-      console.log(exception);
     }
   };
 
-  const addBlog = async (e) => {
-    e.preventDefault();
+  const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
     try {
-      const blog = await blogService.create({
-        title,
-        author,
-        url,
-      });
+      const blog = await blogService.create(blogObject);
       setBlogs(blogs.concat(blog));
-      notifier(`A new blog ${title} by ${author} has been added`);
-      setUrl('');
-      setAuthor('');
-      setTitle('');
+      notifier(
+        `A new blog ${blogObject.title} by ${blogObject.author} has been added`
+      );
     } catch (exception) {
       notifier(`A new blog could not be added: make sure to fill all items`);
-      console.log(exception);
     }
   };
 
@@ -85,13 +66,7 @@ const App = () => {
 
   const loginForm = () => (
     <Togglable buttonLabel="Login">
-      <LoginForm
-        username={username}
-        password={password}
-        handleLogin={handleLogin}
-        setUsername={setUsername}
-        setPassword={setPassword}
-      />
+      <LoginForm loginHandler={handleLogin} />
     </Togglable>
   );
 
@@ -99,15 +74,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
-      <BlogForm
-        author={author}
-        title={title}
-        url={url}
-        addBlog={addBlog}
-        setTitle={setTitle}
-        setAuthor={setAuthor}
-        setUrl={setUrl}
-      />
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   );
 
