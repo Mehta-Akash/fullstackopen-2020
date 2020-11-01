@@ -72,6 +72,19 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async (blogToDelete) => {
+    try {
+      await blogService.remove(blogToDelete);
+      setBlogs(
+        blogs.filter((blog) => {
+          return blog.id !== blogToDelete.id;
+        })
+      );
+    } catch (exception) {
+      notifier('Blog deleted');
+    }
+  };
+
   const logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
@@ -90,7 +103,9 @@ const App = () => {
       <BlogForm createBlog={addBlog} />
     </Togglable>
   );
+
   blogs.sort((first, second) => second.likes - first.likes);
+
   return (
     <div className="pageContainer">
       <h2 className="heading">Blogs Website</h2>
@@ -106,7 +121,13 @@ const App = () => {
           {blogForm()}
           <div className="cards">
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateLikes={updateLikes}
+                deleteBlog={deleteBlog}
+                user={user}
+              />
             ))}
           </div>
         </div>
