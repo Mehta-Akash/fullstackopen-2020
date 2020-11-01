@@ -59,6 +59,19 @@ const App = () => {
     }
   };
 
+  const updateLikes = async (likeUpdatedBlog) => {
+    try {
+      const blogLikeUpdate = await blogService.update(likeUpdatedBlog);
+      setBlogs(
+        blogs.map((blog) => {
+          return blog.id === likeUpdatedBlog.id ? blogLikeUpdate : blog;
+        })
+      );
+    } catch (exception) {
+      notifier(`Error updating likes`);
+    }
+  };
+
   const logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
@@ -93,7 +106,7 @@ const App = () => {
           {blogForm()}
           <div className="cards">
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
             ))}
           </div>
         </div>
