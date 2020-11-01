@@ -24,7 +24,7 @@ form {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 form input {
@@ -39,7 +39,7 @@ form button {
   color: white;
   padding: 0.3rem 5rem;
   margin-top: 0.6rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .username {
