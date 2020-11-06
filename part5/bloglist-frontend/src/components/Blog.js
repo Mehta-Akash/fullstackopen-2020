@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
-  const [visible, setVisible] = useState(false);
-  const showWhenVisible = { display: visible ? '' : 'none' };
+  const [visible, setVisible] = useState(false)
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
-    setVisible(!visible);
-  };
+    setVisible(!visible)
+  }
 
   const increaseLike = () => {
-    const likes = blog.likes + 1;
-    console.log(blog.user.id);
+    const likes = blog.likes + 1
+    console.log(blog.user.id)
     updateLikes({
       user: blog.user.id,
       likes: likes,
@@ -18,20 +18,19 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
       title: blog.title,
       url: blog.url,
       id: blog.id,
-    });
-  };
+    })
+  }
 
   const deleteBlogFunction = () => {
     const confirm = window.confirm(
       `Remove blog ${blog.title} by ${blog.author}`
-    );
-    console.log(confirm);
-    if(confirm){
+    )
+    console.log(confirm)
+    if (confirm) {
       deleteBlog(blog)
     }
     // return confirm ? deleteBlog(blog) : null;
-  };
-
+  }
 
   return (
     <div className="blogContainer">
@@ -43,9 +42,8 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
           {blog.author}
         </p>
         <p className="blogUrl">
-          <b>URL:</b> <a hrerf="/#">{blog.url}</a>
+          <b>URL:</b> {blog.url}
         </p>
-        {console.log(blog)}
         <p className="user">User: {blog.user.name}</p>
         <div>
           <p className="blogLikes">Likes: {blog.likes}</p>
@@ -53,15 +51,16 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
         </div>
         <div>
           {user.name === blog.user.name ? (
-          <div>
-            <button onClick={deleteBlogFunction}>Delete</button>
+            <div>
+              <button onClick={deleteBlogFunction}>Delete</button>
             </div>
-          ): ""}
-          
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
