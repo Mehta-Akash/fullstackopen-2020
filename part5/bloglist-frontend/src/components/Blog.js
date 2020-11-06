@@ -10,12 +10,13 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
 
   const increaseLike = () => {
     const likes = blog.likes + 1;
+    console.log(blog.user.id);
     updateLikes({
       user: blog.user.id,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
       likes: likes,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
       id: blog.id,
     });
   };
@@ -31,6 +32,7 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
     // return confirm ? deleteBlog(blog) : null;
   };
 
+
   return (
     <div className="blogContainer">
       <h3 className="blogTitle">{blog.title}</h3>
@@ -43,7 +45,8 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
         <p className="blogUrl">
           <b>URL:</b> <a hrerf="/#">{blog.url}</a>
         </p>
-        <p>User: {blog.user ? blog.user.name : ''}</p>
+        {console.log(blog)}
+        <p className="user">User: {blog.user.name}</p>
         <div>
           <p className="blogLikes">Likes: {blog.likes}</p>
           <button onClick={increaseLike}>Like</button>
