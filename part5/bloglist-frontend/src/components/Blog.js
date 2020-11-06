@@ -35,19 +35,19 @@ const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
   return (
     <div className="blogContainer">
       <h3 className="blogTitle">{blog.title}</h3>
+      <p className="blogAuthor">
+        <b>Author: </b>
+        {blog.author}
+      </p>
       <button onClick={toggleVisibility}> {visible ? 'Hide' : 'View'} </button>
-      <div style={showWhenVisible}>
-        <p className="blogAuthor">
-          <b>Author: </b>
-          {blog.author}
-        </p>
+      <div style={showWhenVisible} className="blogTogglingComponent">
         <p className="blogUrl">
           <b>URL:</b> {blog.url}
         </p>
         <p className="user">User: {blog.user.name}</p>
         <div>
           <p className="blogLikes">Likes: {blog.likes}</p>
-          <button onClick={increaseLike}>Like</button>
+          <button onClick={increaseLike} className="likesButton">Like</button>
         </div>
         <div>
           {user.name === blog.user.name ? (
