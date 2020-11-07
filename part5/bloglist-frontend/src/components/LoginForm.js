@@ -19,6 +19,7 @@ const LoginForm = ({ loginHandler }) => {
       <div>
         <input
           type="text"
+          id="username"
           value={username}
           name="Username"
           placeholder="Username"
@@ -28,6 +29,7 @@ const LoginForm = ({ loginHandler }) => {
       <div>
         <input
           type="password"
+          id="password"
           value={password}
           name="Password"
           placeholder="Password"
@@ -37,7 +39,7 @@ const LoginForm = ({ loginHandler }) => {
         />
       </div>
       <div>
-        <button>Log in</button>
+        <button id="login-button">Log in</button>
       </div>
     </form>
   )
