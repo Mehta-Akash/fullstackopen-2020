@@ -11,9 +11,9 @@ const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdote)
   const filteredAnecdotes = useSelector((state) => state.filter)
 
-  const vote = (id) => {
-    dispatch(increaseVote(id))
-    const anecdoteVotedFor = anecdotes.find((anec) => anec.id === id.id)
+  const vote = (anecdote) => {
+    dispatch(increaseVote(anecdote))
+    const anecdoteVotedFor = anecdotes.find((anec) => anec.id === anecdote.id)
     const notification = `You voted for '${anecdoteVotedFor.content}'`
     dispatch(showNotification(notification))
     setTimeout(() => {
