@@ -13,7 +13,7 @@ const AnecdoteList = () => {
 
   const vote = (id) => {
     dispatch(increaseVote(id))
-    const anecdoteVotedFor = anecdotes.find((anec) => anec.id === id)
+    const anecdoteVotedFor = anecdotes.find((anec) => anec.id === id.id)
     const notification = `You voted for '${anecdoteVotedFor.content}'`
     dispatch(showNotification(notification))
     setTimeout(() => {
@@ -35,7 +35,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
