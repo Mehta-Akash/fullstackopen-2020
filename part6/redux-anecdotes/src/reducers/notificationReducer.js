@@ -22,4 +22,20 @@ export const hideNotification = () => {
   }
 }
 
+export const setNotification = (content, time) => {
+  return async dispatch => {
+    const delay = time * 1000
+    
+    dispatch( {
+      type: 'SHOW_NOTIFICATION',
+      data: content
+    })
+
+    await setTimeout(() => {
+      dispatch(hideNotification())
+    }, delay)
+    
+  }
+}
+
 export default reducer
