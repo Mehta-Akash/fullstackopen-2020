@@ -22,18 +22,25 @@ export const hideNotification = () => {
   }
 }
 
+const timeoutArray = []
+
 export const setNotification = (content, time) => {
+
   return async dispatch => {
     const delay = time * 1000
-    
+    let timeoutID
+
     dispatch( {
       type: 'SHOW_NOTIFICATION',
       data: content
     })
 
-    await setTimeout(() => {
+    timeoutID = await setTimeout(() => {
       dispatch(hideNotification())
     }, delay)
+
+    timeoutArray.push(timeoutID)
+    clearTimeout(timeoutArray[timeoutArray.length - 2])
     
   }
 }
