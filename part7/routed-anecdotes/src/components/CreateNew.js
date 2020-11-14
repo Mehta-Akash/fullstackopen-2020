@@ -1,7 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useField } from '../hooks/index'
-
+import _ from 'lodash'
 
 const CreateNew = (props) => {
     const content = useField('content')
@@ -34,9 +34,9 @@ const CreateNew = (props) => {
       info.reset()
     }
 
-    const {reset, ...cont} = {...content}
-    const {'reset': a, ...aut} = {...author}
-    const {'reset': b, ...inf} = {...info}
+    const cont = _.omit(content, 'reset')
+    const aut = _.omit(author, 'reset')
+    const inf = _.omit(info, 'reset')
   
     return (
       <div>
@@ -62,3 +62,9 @@ const CreateNew = (props) => {
   }
 
   export default CreateNew
+
+  
+
+    // const {reset, ...cont} = {...content}
+    // const {'reset': a, ...aut} = {...author}
+    // const {'reset': b, ...inf} = {...info}
