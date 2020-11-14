@@ -4,6 +4,8 @@ import CreateNew from './components/CreateNew'
 import AnecdoteList from './components/AnecdoteList'
 import About from './components/About'
 import Footer from './components/Footer'
+import Anecdote from './components/Anecdote'
+import { Switch, Route } from 'react-router-dom'
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -48,9 +50,22 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
+      <p>{notification}</p>
+      <Switch>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/anecdotes/:id">
+          <Anecdote anecdotes={anecdotes}/>
+        </Route>
+        <Route path='/create'>
+          <CreateNew addNew={addNew} setNotification={setNotification}/>
+        </Route>
+        <Route path="/">
+          <AnecdoteList anecdotes={anecdotes}/>
+        </Route>
+      </Switch>
+      <br /> 
       <Footer />
     </div>
   )
