@@ -2,6 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useField } from '../hooks/index'
 import _ from 'lodash'
+import { Table, Form, Button } from 'react-bootstrap'
 
 const CreateNew = (props) => {
     const content = useField('content')
@@ -41,22 +42,25 @@ const CreateNew = (props) => {
     return (
       <div>
         <h2>create a new anecdote</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            content
-            <input {...cont}/>
-          </div>
-          <div>
-            author
-            <input {...aut}/>
-          </div>
-          <div>
-            url for more info
-            <input {...inf}/>
-          </div>
-          <button>Create</button>
-          <button onClick={clear}>Reset</button>
-        </form>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label>
+              content
+            </Form.Label>  
+              <Form.Control {...cont}/>
+            
+            <Form.Label>
+              author
+            </Form.Label>  
+              <Form.Control {...aut}/>
+            <Form.Label>
+              url for more info
+            </Form.Label>
+              <Form.Control {...inf}/>
+            <Button variant="primary">Create</Button>
+            <Button variant="secondary" onClick={clear}>Reset</Button>
+          </Form.Group>
+        </Form>
       </div>
     )
   }
