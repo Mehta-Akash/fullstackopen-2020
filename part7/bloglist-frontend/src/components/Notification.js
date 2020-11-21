@@ -16,8 +16,6 @@ const Notification = () => {
     background: 'lightgrey',
   }
 
-  console.log('Notification in the Notification component is:', notification)
-
   return (
     <div>
       {notification ? (

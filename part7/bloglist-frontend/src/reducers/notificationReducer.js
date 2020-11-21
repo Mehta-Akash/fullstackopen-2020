@@ -1,7 +1,6 @@
 const reducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      console.log(action.data)
       return action.data
     case 'CLEAR_NOTIF':
       return ''

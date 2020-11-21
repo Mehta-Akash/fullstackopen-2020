@@ -20,7 +20,6 @@ const reducer = (state = [], action) => {
 export const initialiseBlogs = () => {
   return async (dispatch) => {
     const blogs = await blogService.getAll()
-    console.log(blogs)
     dispatch({
       type: 'INIT_BLOGS',
       data: blogs,
@@ -41,7 +40,6 @@ export const increaseLike = (likedBlog) => {
 export const removeBlog = (blogToRemove) => {
   return async (dispatch) => {
     const deletedBlog = await blogService.remove(blogToRemove.id)
-    console.log(deletedBlog)
     dispatch({
       type: 'REMOVE',
       data: blogToRemove,
@@ -52,7 +50,6 @@ export const removeBlog = (blogToRemove) => {
 export const addBlog = (blog) => {
   return async (dispatch) => {
     const newBlog = await blogService.create(blog)
-    console.log(newBlog)
     dispatch({
       type: 'NEW_BLOG',
       data: newBlog,
