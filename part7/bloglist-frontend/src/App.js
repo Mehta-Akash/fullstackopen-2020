@@ -145,13 +145,3 @@ const App = () => {
 }
 
 export default App
-
-// const createBlog = async (blog) => {
-//   try {
-//     dispatch(addBlog(blog))
-//     blogFormRef.current.toggleVisibility()
-//     notifyWith(`a new blog '${blog.title}' by ${blog.author} added!`)
-//   } catch (exception) {
-//     console.log(exception)
-//   }
-// }
