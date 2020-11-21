@@ -9,11 +9,7 @@ import loginService from './services/login'
 import storage from './utils/storage'
 
 import { setNotification } from './reducers/notificationReducer'
-import {
-  initialiseBlogs,
-  increaseLike,
-  removeBlog,
-} from './reducers/blogsReducer'
+import { initialiseBlogs } from './reducers/blogsReducer'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -58,26 +54,6 @@ const App = () => {
 
   const toggleBlogForm = () => {
     blogFormRef.current.toggleVisibility()
-  }
-
-  const handleLike = async (id) => {
-    const blogToLike = blogs.find((b) => b.id === id)
-    const likedBlog = {
-      ...blogToLike,
-      likes: blogToLike.likes + 1,
-      user: blogToLike.user.id,
-    }
-    dispatch(increaseLike(likedBlog))
-  }
-
-  const handleRemove = async (id) => {
-    const blogToRemove = blogs.find((b) => b.id === id)
-    const ok = window.confirm(
-      `Remove blog ${blogToRemove.title} by ${blogToRemove.author}`
-    )
-    if (ok) {
-      dispatch(removeBlog(blogToRemove))
-    }
   }
 
   const handleLogout = () => {
@@ -135,8 +111,6 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          handleLike={handleLike}
-          handleRemove={handleRemove}
           own={user.username === blog.user.username}
         />
       ))}
