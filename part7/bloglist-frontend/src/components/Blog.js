@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 // import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { increaseLike, removeBlog } from '../reducers/blogsReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, own }) => {
   const [visible, setVisible] = useState(false)
 
   const dispatch = useDispatch()
-  const blogs = useSelector(state => state.blogs)
+  const blogs = useSelector((state) => state.blogs)
 
   const blogStyle = {
     paddingTop: 10,
@@ -42,10 +43,12 @@ const Blog = ({ blog, own }) => {
   return (
     <div style={blogStyle} className="blog">
       <div>
-        <i>{blog.title}</i> by {blog.author}{' '}
-        <button onClick={() => setVisible(!visible)}>{label}</button>
+        <Link to={`/blogs/${blog.id}`}>
+          <i>{blog.title}</i> by {blog.author}{' '}
+        </Link>
+        {/* <button onClick={() => setVisible(!visible)}>{label}</button> */}
       </div>
-      {visible && (
+      {/* {visible && (
         <div>
           <div>{blog.url}</div>
           <div>
@@ -55,7 +58,7 @@ const Blog = ({ blog, own }) => {
           <div>{blog.user.name}</div>
           {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
         </div>
-      )}
+      )} */}
     </div>
   )
 }
