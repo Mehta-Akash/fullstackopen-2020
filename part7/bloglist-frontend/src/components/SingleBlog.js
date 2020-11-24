@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { increaseLike } from '../reducers/blogsReducer'
+import { increaseLike, addComment } from '../reducers/blogsReducer'
+import blogService from '../services/blogs'
 
 const SingleBlog = ({ singleBlog }) => {
-//   console.log('SingleBlog', singleBlog)
+  //   console.log('SingleBlog', singleBlog)
   const blogs = useSelector((state) => state.blogs)
   const dispatch = useDispatch()
+  const [comment, setComment] = useState('')
+
   if (!singleBlog) {
     return null
   }
@@ -19,6 +22,17 @@ const SingleBlog = ({ singleBlog }) => {
     }
     dispatch(increaseLike(likedBlog))
   }
+
+  const handleComment = async (event) => {
+    event.preventDefault()
+    dispatch(addComment(comment, singleBlog.id))
+    setComment('')
+  }
+
+  const style = {
+    paddingLeft: '1rem',
+  }
+
   return (
     <div>
       <h2>{singleBlog.title}</h2>
@@ -29,6 +43,21 @@ const SingleBlog = ({ singleBlog }) => {
       </div>
 
       <p>Added by {singleBlog.user.name}</p>
+      <h3>Comments</h3>
+
+      <form onSubmit={handleComment}>
+        <input
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+        />
+        <button>Add comment</button>
+      </form>
+
+      {singleBlog.comments.map((comment, i) => (
+        <li style={style} key={i}>
+          {comment}
+        </li>
+      ))}
     </div>
   )
 }

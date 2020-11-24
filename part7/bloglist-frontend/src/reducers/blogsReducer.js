@@ -12,6 +12,11 @@ const reducer = (state = [], action) => {
     case 'NEW_BLOG':
       const addedBlog = state.concat(action.data)
       return addedBlog
+    case 'NEW_COMMENT':
+      const updatedComment = state.map((b) =>
+        b.id === action.data.id ? action.data : b
+      )
+      return updatedComment
     default:
       return state
   }
@@ -53,6 +58,16 @@ export const addBlog = (blog) => {
     dispatch({
       type: 'NEW_BLOG',
       data: newBlog,
+    })
+  }
+}
+
+export const addComment = (comments, id) => {
+  return async (dispatch) => {
+    const comment = await blogService.addComment(comments, id)
+    dispatch({
+      type: 'NEW_COMMENT',
+      data: comment,
     })
   }
 }
