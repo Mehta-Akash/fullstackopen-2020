@@ -5,14 +5,24 @@ import Togglable from './components/Togglable.'
 import NewBlog from './components/NewBlog'
 import LoginForm from './components/LoginForm'
 import { useDispatch, useSelector } from 'react-redux'
-import { userLogout, loginFromStorage } from './reducers/userReducer'
-import { Link, Switch, Route, useRouteMatch } from 'react-router-dom'
+import { loginFromStorage } from './reducers/userReducer'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import storage from './utils/storage'
+import Header from './components/Header'
 import { initialiseBlogs } from './reducers/blogsReducer'
 import userService from './services/users'
 import SingleBlog from './components/SingleBlog'
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Grid
+} from '@material-ui/core'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -57,15 +67,9 @@ const App = () => {
     ? blogs.find((blog) => blog.id === blogMatch.params.id)
     : null
 
-  const handleLogout = () => {
-    dispatch(userLogout())
-    storage.logoutUser()
-  }
-
   if (!user) {
     return (
       <div>
-        <h2>login to application</h2>
         <Notification />
         <LoginForm />
       </div>
@@ -74,21 +78,9 @@ const App = () => {
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
-  const style = {
-    backgroundColor: '#dddddd',
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  }
-
   return (
     <div>
-      <div style={style}>
-        <h1>Blog App</h1>
-        <Link to="/users">Users</Link>
-        <Link to="/">Blogs</Link>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </div>
+      <Header />
 
       <Notification />
 
@@ -107,13 +99,29 @@ const App = () => {
             <NewBlog toggleBlogForm={toggleBlogForm} />
           </Togglable>
 
-          {blogs.sort(byLikes).map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              own={user.username === blog.user.username}
-            />
-          ))}
+          <Grid container>
+            <Grid xs={false} sm={2} md={3} />
+            <Grid xs={12} sm={8} md={6}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableBody>
+                    {blogs.sort(byLikes).map((blog) => (
+                      <TableRow>
+                        <TableCell>
+                          <Blog
+                            key={blog.id}
+                            blog={blog}
+                            own={user.username === blog.user.username}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid xs={false} sm={2} md={3} />
+          </Grid>
         </Route>
       </Switch>
     </div>
