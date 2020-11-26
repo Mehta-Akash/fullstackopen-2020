@@ -23,5 +23,4 @@ const User = ({ userToDisplay }) => {
     </div>
   )
 }
-
 export default User
