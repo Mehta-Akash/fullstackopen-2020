@@ -33,11 +33,14 @@ const SetBirthYear = ({ authors }) => {
       value: a.name,
     }
   })
+  const style = {
+    width: '300px',
+  }
 
   return (
     <div>
       <h2>Set Birthyear</h2>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} style={style}>
         <Select
           options={authorNames}
           placeholder="Select author"

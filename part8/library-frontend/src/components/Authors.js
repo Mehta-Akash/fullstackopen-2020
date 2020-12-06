@@ -16,6 +16,8 @@ const Authors = (props) => {
 
   const authors = result.data.allAuthors
 
+
+
   return (
     <div>
       <h2>authors</h2>
