@@ -9,6 +9,9 @@ const Books = (props) => {
   if (!props.show) {
     return null
   }
+  if (result.loading) {
+    return <div>loading...</div>
+  }
 
   let books = result.data.allBooks
 
