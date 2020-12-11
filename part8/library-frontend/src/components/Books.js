@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useApolloClient, useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS)
   const [bookToShow, setBookToShow] = useState('')
+  const client = useApolloClient()
 
   if (!props.show) {
     return null
@@ -15,20 +16,31 @@ const Books = (props) => {
 
   let books = result.data.allBooks
 
-  let genreList = []
+  let genreList = ['all genres']
   books.map((a) => {
     genreList = [...genreList, ...a.genres]
     return genreList
   })
-  genreList.push('all genres')
   genreList = [...new Set(genreList)]
 
   let i = 0
 
   const filter = ({ target }) => {
-    const booksByGenre = result.data.allBooks.filter((a) => {
-      return a.genres.includes(target.outerText)
+    const dataInStore = client.readQuery({
+      query: ALL_BOOKS,
     })
+
+    let booksByGenre = []
+    if (dataInStore) {
+      booksByGenre = dataInStore.allBooks.filter((a) => {
+        return a.genres.includes(target.outerText)
+      })
+    } else {
+      booksByGenre = result.data.allBooks.filter((a) => {
+        return a.genres.includes(target.outerText)
+      })
+    }
+
     target.outerText === 'all genres'
       ? setBookToShow(books)
       : setBookToShow(booksByGenre)

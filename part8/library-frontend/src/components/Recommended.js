@@ -10,13 +10,12 @@ const Recommended = (props) => {
   useEffect(() => {
     if (response.data) {
       setFavouriteBook(response.data.allBooks)
-      console.log('useEffect called')
     }
   }, [response.data])
 
   useEffect(() => {
-    if (result.data) {
-      getBooks({ variables: { genre: result.data.me.favoriteGenre } })
+    if (result.data ) {
+      result.data.me && getBooks({ variables: { genre: result.data.me.favoriteGenre } })
     }
   }, [getBooks, result.data])
 
