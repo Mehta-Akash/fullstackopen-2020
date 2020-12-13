@@ -1,5 +1,8 @@
 const Book = require('../models/book')
 const Authors = require('../models/author')
+const { PubSub } = require('apollo-server')
+
+const pubsub = new PubSub()
 
 const books = `
   extend type Query {
@@ -21,6 +24,9 @@ const books = `
         genres: [String!]!
       ): Book
     }
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 const bookResolver = {
   Query: {
@@ -58,18 +64,31 @@ const bookMutation = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated')
       }
+
       let author = await Authors.findOne({ name: args.author })
       if (!author) {
         author = await new Authors({ name: args.author })
         await author.save()
       }
+
       const book = new Book({ ...args, author })
+
       try {
         await book.save()
       } catch (error) {
         throw new UserInputError(error.message)
       }
+
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book
+    },
+  },
+}
+
+const bookSubscription = {
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
     },
   },
 }
@@ -77,3 +96,4 @@ const bookMutation = {
 module.exports.book = books
 module.exports.bookResolver = bookResolver
 module.exports.bookMutation = bookMutation
+module.exports.bookSubscription = bookSubscription

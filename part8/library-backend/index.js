@@ -11,7 +11,12 @@ const User = require('./models/user')
 const { MONGODB_URI, JWT_SECRET } = require('./utils/config')
 const jwt = require('jsonwebtoken')
 const { author, authorResolver, authorMutation } = require('./schemas/author')
-const { book, bookResolver, bookMutation } = require('./schemas/books')
+const {
+  book,
+  bookResolver,
+  bookMutation,
+  bookSubscription,
+} = require('./schemas/books')
 const { user, userResolver, userMutation } = require('./schemas/user')
 
 console.log('Connecting to', MONGODB_URI)
@@ -38,6 +43,9 @@ const query = gql`
   type Token {
     value: String!
   }
+  # type Subscription {
+  #   bookAdded: Book!
+  # }
 `
 
 const resolvers = {
@@ -65,7 +73,8 @@ const schema = makeExecutableSchema({
     userResolver,
     bookMutation,
     authorMutation,
-    userMutation
+    userMutation,
+    bookSubscription
   ),
 })
 
@@ -81,6 +90,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
