@@ -1,5 +1,4 @@
 const Authors = require('../models/author')
-const Book = require('../models/book')
 const { AuthenticationError } = require('apollo-server')
 
 const author = `
@@ -23,18 +22,13 @@ const authorResolver = {
     authorCount: () => Authors.collection.countDocuments(),
     allAuthors: async () => {
       const authors = await Authors.find({})
-
-      const numBooksPerAuthor = authors.map(async (author) => {
-        const bookNum = await Book.find({ author: author.id }).countDocuments()
-        return {
-          id: author.id,
-          name: author.name,
-          born: author.born,
-          bookCount: bookNum,
-        }
-      })
-
-      return numBooksPerAuthor
+      console.log('Author.find')
+      return authors
+    },
+  },
+  Author: {
+    bookCount: async (root, _, context) => {
+      return context.bookLoader.load(root._id)
     },
   },
 }

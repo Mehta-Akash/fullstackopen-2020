@@ -8,6 +8,7 @@ const {
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const User = require('./models/user')
+const Books = require('./models/book')
 const { MONGODB_URI, JWT_SECRET } = require('./utils/config')
 const jwt = require('jsonwebtoken')
 const { author, authorResolver, authorMutation } = require('./schemas/author')
@@ -18,6 +19,8 @@ const {
   bookSubscription,
 } = require('./schemas/books')
 const { user, userResolver, userMutation } = require('./schemas/user')
+const DataLoader = require('dataloader')
+const _ = require('lodash')
 
 console.log('Connecting to', MONGODB_URI)
 
@@ -81,11 +84,27 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   context: async ({ req }) => {
+    const bookLoader = new DataLoader(async (keys) => {
+      const books = await Books.find({})
+
+      const bookMap = {}
+      books.forEach((book) => {
+        bookMap[book.id] = book
+      })
+
+      const keysBooks = keys.map((key) => {
+        return books.filter((book) => {
+          return JSON.stringify(book.author) === JSON.stringify(key)
+        }).length
+      })
+      return keys.map((_, i) => keysBooks[i])
+    })
+
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
       const currentUser = await User.findById(decodedToken.id)
-      return { currentUser }
+      return { currentUser, bookLoader }
     }
   },
 })
