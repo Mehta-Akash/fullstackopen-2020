@@ -87,11 +87,6 @@ const server = new ApolloServer({
     const bookLoader = new DataLoader(async (keys) => {
       const books = await Books.find({})
 
-      const bookMap = {}
-      books.forEach((book) => {
-        bookMap[book.id] = book
-      })
-
       const keysBooks = keys.map((key) => {
         return books.filter((book) => {
           return JSON.stringify(book.author) === JSON.stringify(key)
