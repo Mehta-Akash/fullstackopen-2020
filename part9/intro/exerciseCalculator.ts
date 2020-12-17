@@ -8,6 +8,18 @@ interface exerciseSummary {
   average: number
 }
 
+const parseArgs = (args: Array<string>) => {
+  const targets = Number(args[2])
+  let days: Array<number> = []
+  for (let i: number = 3; i < args.length; i++) {
+    days.push(Number(args[i]))
+  }
+  return {
+    targets,
+    days,
+  }
+}
+
 const exerciseCalculator = (
   days: Array<number>,
   target: number
@@ -38,4 +50,9 @@ const exerciseCalculator = (
   }
 }
 
-console.log(exerciseCalculator([4, 0, 2, 4.5, 0, 6, 1], 2))
+try {
+  const { days, targets } = parseArgs(process.argv)
+  console.log(exerciseCalculator(days, targets))
+} catch (e) {
+  console.log('Error has occuted', e.message)
+}
