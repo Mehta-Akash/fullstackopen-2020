@@ -9,14 +9,20 @@ interface exerciseSummary {
 }
 
 const parseArgs = (args: Array<string>) => {
-  const targets = Number(args[2])
-  let days: Array<number> = []
-  for (let i: number = 3; i < args.length; i++) {
-    days.push(Number(args[i]))
-  }
-  return {
-    targets,
-    days,
+  if (args.length < 4) throw new Error('Not enough arguments')
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    const targets = Number(args[2])
+    let days: Array<number> = []
+    for (let i: number = 3; i < args.length; i++) {
+      days.push(Number(args[i]))
+    }
+    return {
+      targets,
+      days,
+    }
+  } else {
+    throw new Error('Provided values were not numbers')
   }
 }
 
