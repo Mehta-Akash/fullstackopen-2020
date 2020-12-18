@@ -10,7 +10,7 @@ app.get('/hello', (_req, res) => {
 app.get('/bmi', (req, res) => {
   const height = Number(req.query.height)
   const weight = Number(req.query.weight)
-  if (!isNaN(height) && !isNaN(weight) && height !== 0) {
+  if (!isNaN(height) && !isNaN(weight) && height !== 0 && weight !== 0) {
     const bmi = calculateBmi(height, weight)
     const returnObject = { height, weight, bmi }
     res.send(returnObject)
