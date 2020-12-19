@@ -26,7 +26,7 @@ const parseArgs = (args: Array<string>) => {
   }
 };
 
-const exerciseCalculator = (
+export const exerciseCalculator = (
   days: Array<number>,
   target: number
 ): exerciseSummary => {
