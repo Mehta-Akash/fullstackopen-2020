@@ -1,39 +1,40 @@
 interface bmiValues {
-  value1: number
-  value2: number
+  value1: number;
+  value2: number;
 }
 
 const parseArguments = (args: Array<string>): bmiValues => {
-  if (args.length < 4) throw new Error('Not enough arguments')
-  if (args.length > 4) throw new Error('Too many arguments')
+  if (args.length < 4) throw new Error('Not enough arguments');
+  if (args.length > 4) throw new Error('Too many arguments');
 
   if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
     return {
       value1: Number(args[2]),
       value2: Number(args[3]),
-    }
+    };
   } else {
-    throw new Error('Provided values were not numbers')
+    throw new Error('Provided values were not numbers');
   }
-}
+};
 
 export const calculateBmi = (height: number, weight: number): string => {
-  const bmi: number = weight / (((height / 100) * height) / 100)
+  const bmi: number = weight / (((height / 100) * height) / 100);
 
   if (bmi < 18.5) {
-    return 'Underweight'
+    return 'Underweight';
   } else if (bmi < 25) {
-    return 'Normal weight'
+    return 'Normal weight';
   } else if (bmi < 30) {
-    return 'Overweight'
+    return 'Overweight';
   } else {
-    return 'Obese'
+    return 'Obese';
   }
-}
+};
 
 try {
-  const { value1, value2 } = parseArguments(process.argv)
-  console.log(calculateBmi(value1, value2))
+  const { value1, value2 } = parseArguments(process.argv);
+  console.log(calculateBmi(value1, value2));
 } catch (e) {
-  console.log('Error has occured, ', e.message)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  console.log('Error has occured, ', e.message);
 }
