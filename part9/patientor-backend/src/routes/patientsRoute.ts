@@ -8,4 +8,17 @@ router.get('/', (_req, res) => {
   res.send(data);
 });
 
+router.post('/', (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { name, ssn, dateOfBirth, occupation, gender } = req.body;
+  const addedPatient = patientService.addPatient({
+    name,
+    ssn,
+    dateOfBirth,
+    occupation,
+    gender,
+  });
+  res.json(addedPatient);
+});
+
 export default router;
