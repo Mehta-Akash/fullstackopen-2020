@@ -5,18 +5,22 @@ import { v4 as uuid } from 'uuid';
 const patients: nonSensitivePatientData[] = patientData;
 
 const getPatients = (): nonSensitivePatientData[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
-    id,
-    name,
-    dateOfBirth,
-    gender,
-    occupation,
-  }));
+  return patients.map(
+    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+      id,
+      name,
+      dateOfBirth,
+      gender,
+      occupation,
+      entries,
+    })
+  );
 };
 
 const addPatient = (patient: NewPerson): Patient => {
   const newPerson = {
     id: uuid(),
+    entries: [],
     ...patient,
   };
   patientData.push(newPerson);
