@@ -22,8 +22,13 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  const patient = patientService.getPatients().find((x) => x.id === id);
-  res.send(patient);
+  const patient = patientService.getSinglePatient(id);
+  if (patient){
+    res.send(patient);
+  } else {
+    res.status(404);
+  }
+  
 });
 
 export default router;
