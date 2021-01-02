@@ -16,6 +16,7 @@ router.post('/', (req, res) => {
     const addedPatient = patientsService.addPatient(newPatient);
     res.json(addedPatient);
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     res.status(400).send(e.message);
   }
 });
