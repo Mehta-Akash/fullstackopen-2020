@@ -10,6 +10,7 @@ export interface BaseEntry {
   date: string;
   specialist: string;
   diagnosisCodes?: Array<Diagnosis['code']>;
+  type: EntryType;
 }
 
 export enum HealthCheckRating {
@@ -19,29 +20,35 @@ export enum HealthCheckRating {
   'CriticalRisk' = 3,
 }
 
+export enum EntryType {
+  HealthCheck = 'HealthCheck',
+  OccupationalHealthcare = 'OccupationalHealthcare',
+  Hospital = 'Hospital',
+}
+
 interface HealthCheckEntry extends BaseEntry {
-  type: 'HealthCheck';
+  type: EntryType.HealthCheck;
   healthCheckRating: HealthCheckRating;
 }
 
-interface SickLeave {
+export interface SickLeave {
   startDate: string;
   endDate: string;
 }
 
 interface OccupationalHealthCareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare';
+  type: EntryType.OccupationalHealthcare;
   employerName: string;
   sickLeave?: SickLeave;
 }
 
-interface Discharge {
+export interface Discharge {
   date: string;
   criteria: string;
 }
 
 interface HospitalEntry extends BaseEntry {
-  type: 'Hospital';
+  type: EntryType.Hospital;
   discharge: Discharge;
 }
 
@@ -60,11 +67,24 @@ export interface Patient {
   entries: Entry[];
 }
 
+// export type NewEntry =
+//   | Omit<HospitalEntry, 'id'>
+//   | Omit<HealthCheckEntry, 'id'>
+//   | Omit<OccupationalHealthCareEntry, 'id'>;
+
+export type NewEntry = DistributiveOmit<Entry, 'id'>;
+
+type DistributiveOmit<T, K extends keyof T> = T extends any
+  ? Omit<T, K>
+  : never;
+
 export type nonSensitivePatientData = Omit<Patient, 'ssn'>;
 
 export type NewPerson = Omit<Patient, 'id' | 'entries'>;
 
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
+
+export type NewBaseEntry = Omit<BaseEntry, 'id'>;
 
 export enum Gender {
   Male = 'male',
