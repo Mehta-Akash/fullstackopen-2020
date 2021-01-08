@@ -3,12 +3,12 @@ import {
   nonSensitivePatientData,
   NewPerson,
   Patient,
-  Entry,
   NewEntry,
+  Entry,
 } from '../types';
 import { v4 as uuid } from 'uuid';
 
-const patients = [...patientData];
+let patients = [...patientData];
 
 const getPatients = (): nonSensitivePatientData[] => {
   return patients.map(
@@ -31,20 +31,25 @@ const getSinglePatient = (id: string): Patient | undefined => {
 const addPatient = (patient: NewPerson): Patient => {
   const newPerson = {
     id: uuid(),
-    entries: [],
+    entries: [] as Entry[],
     ...patient,
   };
-  patientData.push(newPerson);
+  patients = patientData.concat(newPerson);
   return newPerson;
 };
 
-const addEntry = (patient: Patient, entry: NewEntry): Entry => {
+const addEntry = (patient: Patient, entry: NewEntry): Patient => {
   const newEntry = {
     ...entry,
     id: uuid(),
   };
+  const updatedPatient = {
+    ...patient,
+    entries: patient.entries.concat(newEntry),
+  };
   patients.find((x) => x.id === patient.id)?.entries.push(newEntry);
-  return newEntry;
+  console.log('Updated patient:', updatedPatient);
+  return updatedPatient;
 };
 
 export default {
